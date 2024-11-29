@@ -1,9 +1,11 @@
 import { model, Schema } from 'mongoose';
 import validator from 'validator';
 import IStudent, {
+  CustomStudentModel,
   IGuardian,
   ILocalGuardian,
   IUserName,
+  // StudentMethods,   for custom instance
 } from './student.interface';
 
 const userNameSchema = new Schema<IUserName>({
@@ -180,7 +182,15 @@ const localGuardianSchema = new Schema<ILocalGuardian>({
   },
 });
 
-const studentSchema = new Schema<IStudent>({
+
+// for custom instance
+// const studentSchema = new Schema<IStudent, CustomStudentModel, StudentMethods>({
+
+// for custom static
+const studentSchema = new Schema<IStudent, CustomStudentModel>({
+
+// normal one
+// const studentSchema = new Schema<IStudent>({
   id: {
     type: String,
     required: [true, `Id is required`],
@@ -252,5 +262,22 @@ const studentSchema = new Schema<IStudent>({
   isDeleted: Boolean,
 });
 
-const Student = model<IStudent>('Student', studentSchema);
+// for custom static
+studentSchema.statics.isStudentExist = async (id: string) => {
+  const existingStudent = await Student.findOne({id});
+  return existingStudent; 
+}
+const Student = model<IStudent, CustomStudentModel>('Student', studentSchema);
+
+// for custom instance
+
+// studentSchema.methods.isStudentExist = async (id: string) => {
+//   const existingStudent = await Student.findOne({id});
+//   return existingStudent;
+// }
+
+// const Student = model<IStudent, CustomStudentModel>('Student', studentSchema);
+
+// normal one
+// const Student = model<IStudent>('Student', studentSchema);
 export default Student;

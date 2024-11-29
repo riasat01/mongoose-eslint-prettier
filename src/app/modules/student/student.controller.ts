@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { StudentServices } from './student.service';
 // import JoiStudentSchema from './joi.student.model';
-import ZodStudentSchema from './zod.student.model'
+import ZodStudentSchema from './zod.student.model';
 
 const createStudent = async (req: Request, res: Response) => {
   try {
@@ -17,7 +17,6 @@ const createStudent = async (req: Request, res: Response) => {
     //     error,
     //   });
     // }
-
 
     // zod validation
 

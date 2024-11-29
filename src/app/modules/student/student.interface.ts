@@ -1,3 +1,5 @@
+import { Model } from 'mongoose';
+
 export interface IGuardian {
   fatherName: string;
   fatherOccupation: string;
@@ -35,5 +37,24 @@ export default interface IStudent {
   localGuardian: ILocalGuardian;
   profileImage?: string;
   isActive: 'active' | 'blocked';
-  isDeleted?: boolean
+  isDeleted?: boolean;
 }
+
+// for creating static
+
+export interface CustomStudentModel extends Model<IStudent>{
+  isStudentExist(id: string): Promise<IStudent | null>;
+}
+
+
+// for creating custom instance
+
+// export type StudentMethods = {
+//   isStudentExist: (id: string) => Promise<IStudent | null>;
+// };
+
+// export type CustomStudentModel = Model<
+//   IStudent,
+//   Record<string, never>,
+//   StudentMethods
+// >;
