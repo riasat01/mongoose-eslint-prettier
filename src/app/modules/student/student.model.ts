@@ -95,10 +95,10 @@ const guardianSchema = new Schema<IGuardian>({
   fatherContactNo: {
     type: String,
     required: [true, "Father's Contact Number is required"],
-    validate: {
-      validator: (value: string) => /^(\+?[0-9]{1,4}[\s\-]?)?(\(?\d{1,4}\)?[\s\-]?)?[\d\-]{7,15}$/.test(value),
-      message: "Father's Contact Number must be a valid phone number (including country code if applicable)",
-    },
+    // validate: {
+    //   validator: (value: string) => /^(\+?[0-9]{1,4}[\s\-]?)?(\(?\d{1,4}\)?[\s\-]?)?[\d\-]{7,15}$/.test(value),
+    //   message: "Father's Contact Number must be a valid phone number (including country code if applicable)",
+    // },
   },
   motherName: {
     type: String,
@@ -127,10 +127,10 @@ const guardianSchema = new Schema<IGuardian>({
   motherContactNo: {
     type: String,
     required: [true, "Mother's Contact Number is required"],
-    validate: {
-      validator: (value: string) => /^(\+?[0-9]{1,4}[\s\-]?)?(\(?\d{1,4}\)?[\s\-]?)?[\d\-]{7,15}$/.test(value),
-      message: "Mother's Contact Number must be a valid phone number (including country code if applicable)",
-    },
+    // validate: {
+    //   validator: (value: string) => /^(\+?[0-9]{1,4}[\s\-]?)?(\(?\d{1,4}\)?[\s\-]?)?[\d\-]{7,15}$/.test(value),
+    //   message: "Mother's Contact Number must be a valid phone number (including country code if applicable)",
+    // },
   },
 });
 
@@ -163,10 +163,10 @@ const localGuardianSchema = new Schema<ILocalGuardian>({
   contactNo: {
     type: String,
     required: [true, 'Contact Number is required'],
-    validate: {
-      validator: (value: string) => /^(\+?[0-9]{1,4}[\s\-]?)?(\(?\d{1,4}\)?[\s\-]?)?[\d\-]{7,15}$/.test(value),
-      message: 'Contact Number must be a valid phone number (including country code if applicable)',
-    },
+    // validate: {
+    //   validator: (value: string) => /^(\+?[0-9]{1,4}[\s\-]?)?(\(?\d{1,4}\)?[\s\-]?)?[\d\-]{7,15}$/.test(value),
+    //   message: 'Contact Number must be a valid phone number (including country code if applicable)',
+    // },
   },
   address: {
     type: String,
