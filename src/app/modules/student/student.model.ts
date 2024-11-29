@@ -15,7 +15,8 @@ const userNameSchema = new Schema<IUserName>({
     validate: [
       {
         validator: function (value: string) {
-          const fname = value?.charAt(0).toUpperCase() + value?.slice(1)?.toLowerCase();
+          const fname =
+            value?.charAt(0).toUpperCase() + value?.slice(1)?.toLowerCase();
           return fname === value;
         },
         message: '{VALUE} is not in capitalize format',
@@ -23,7 +24,7 @@ const userNameSchema = new Schema<IUserName>({
       {
         validator: (value: string) => validator.isAlpha(value),
         message: '{VALUE} is not valid, only alphabets are allowed',
-      }
+      },
     ],
   },
   middleName: {
@@ -34,7 +35,8 @@ const userNameSchema = new Schema<IUserName>({
       {
         validator: function (value: string) {
           if (value) {
-            const mname = value?.charAt(0).toUpperCase() + value?.slice(1)?.toLowerCase();
+            const mname =
+              value?.charAt(0).toUpperCase() + value?.slice(1)?.toLowerCase();
             return mname === value;
           }
           return true; // Allow empty middle name
@@ -44,7 +46,7 @@ const userNameSchema = new Schema<IUserName>({
       {
         validator: (value: string) => validator.isAlpha(value),
         message: '{VALUE} is not valid, only alphabets are allowed',
-      }
+      },
     ],
   },
   lastName: {
@@ -54,7 +56,8 @@ const userNameSchema = new Schema<IUserName>({
     validate: [
       {
         validator: function (value: string) {
-          const lname = value?.charAt(0).toUpperCase() + value?.slice(1)?.toLowerCase();
+          const lname =
+            value?.charAt(0).toUpperCase() + value?.slice(1)?.toLowerCase();
           return lname === value;
         },
         message: '{VALUE} is not in capitalize format',
@@ -62,7 +65,7 @@ const userNameSchema = new Schema<IUserName>({
       {
         validator: (value: string) => validator.isAlpha(value),
         message: '{VALUE} is not valid, only alphabets are allowed',
-      }
+      },
     ],
   },
 });
@@ -76,7 +79,8 @@ const guardianSchema = new Schema<IGuardian>({
     validate: [
       {
         validator: function (value: string) {
-          const fname = value?.charAt(0).toUpperCase() + value?.slice(1)?.toLowerCase();
+          const fname =
+            value?.charAt(0).toUpperCase() + value?.slice(1)?.toLowerCase();
           return fname === value;
         },
         message: '{VALUE} is not in capitalize format',
@@ -84,7 +88,7 @@ const guardianSchema = new Schema<IGuardian>({
       {
         validator: (value: string) => validator.isAlpha(value),
         message: '{VALUE} is not valid, only alphabets are allowed',
-      }
+      },
     ],
   },
   fatherOccupation: {
@@ -108,7 +112,8 @@ const guardianSchema = new Schema<IGuardian>({
     validate: [
       {
         validator: function (value: string) {
-          const mname = value?.charAt(0).toUpperCase() + value?.slice(1)?.toLowerCase();
+          const mname =
+            value?.charAt(0).toUpperCase() + value?.slice(1)?.toLowerCase();
           return mname === value;
         },
         message: '{VALUE} is not in capitalize format',
@@ -116,7 +121,7 @@ const guardianSchema = new Schema<IGuardian>({
       {
         validator: (value: string) => validator.isAlpha(value),
         message: '{VALUE} is not valid, only alphabets are allowed',
-      }
+      },
     ],
   },
   motherOccupation: {
@@ -134,7 +139,6 @@ const guardianSchema = new Schema<IGuardian>({
   },
 });
 
-
 const localGuardianSchema = new Schema<ILocalGuardian>({
   name: {
     type: String,
@@ -144,7 +148,8 @@ const localGuardianSchema = new Schema<ILocalGuardian>({
     validate: [
       {
         validator: function (value: string) {
-          const gname = value?.charAt(0).toUpperCase() + value?.slice(1)?.toLowerCase();
+          const gname =
+            value?.charAt(0).toUpperCase() + value?.slice(1)?.toLowerCase();
           return gname === value;
         },
         message: '{VALUE} is not in capitalize format',
@@ -152,7 +157,7 @@ const localGuardianSchema = new Schema<ILocalGuardian>({
       {
         validator: (value: string) => validator.isAlpha(value),
         message: '{VALUE} is not valid, only alphabets are allowed',
-      }
+      },
     ],
   },
   occupation: {
@@ -174,7 +179,6 @@ const localGuardianSchema = new Schema<ILocalGuardian>({
     maxlength: [100, 'Address cannot be more than 100 characters'],
   },
 });
-
 
 const studentSchema = new Schema<IStudent>({
   id: {
@@ -201,8 +205,8 @@ const studentSchema = new Schema<IStudent>({
     unique: true,
     validate: {
       validator: (value: string) => validator?.isEmail(value),
-      message: `{VALUE} is not a  valid email address`
-    }
+      message: `{VALUE} is not a  valid email address`,
+    },
   },
   contactNo: {
     type: String,
@@ -245,6 +249,7 @@ const studentSchema = new Schema<IStudent>({
     },
     default: 'active',
   },
+  isDeleted: Boolean,
 });
 
 const Student = model<IStudent>('Student', studentSchema);

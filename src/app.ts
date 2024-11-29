@@ -11,7 +11,7 @@ app.use(cors());
 
 // application routes
 app.use(`/api/v1/student`, StudentRouter);
- 
+
 app.get(`/`, async (req: Request, res: Response) => {
   res.json({
     success: true,
