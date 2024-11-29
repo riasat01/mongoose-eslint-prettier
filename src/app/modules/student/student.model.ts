@@ -1,12 +1,14 @@
 import { model, Schema } from 'mongoose';
 import validator from 'validator';
 import IStudent, {
-  CustomStudentModel,
+  // CustomStudentModel,
   IGuardian,
   ILocalGuardian,
   IUserName,
   // StudentMethods,   for custom instance
 } from './student.interface';
+import bcrypt from 'bcrypt';
+import config from '../../config';
 
 const userNameSchema = new Schema<IUserName>({
   firstName: {
@@ -78,20 +80,20 @@ const guardianSchema = new Schema<IGuardian>({
     required: [true, 'Father name is required'],
     trim: true,
     maxlength: [50, 'Father name cannot be more than 50 characters'],
-    validate: [
-      {
-        validator: function (value: string) {
-          const fname =
-            value?.charAt(0).toUpperCase() + value?.slice(1)?.toLowerCase();
-          return fname === value;
-        },
-        message: '{VALUE} is not in capitalize format',
-      },
-      {
-        validator: (value: string) => validator.isAlpha(value),
-        message: '{VALUE} is not valid, only alphabets are allowed',
-      },
-    ],
+    // validate: [
+    //   {
+    //     validator: function (value: string) {
+    //       const fname =
+    //         value?.charAt(0).toUpperCase() + value?.slice(1)?.toLowerCase();
+    //       return fname === value;
+    //     },
+    //     message: '{VALUE} is not in capitalize format',
+    //   },
+    //   {
+    //     validator: (value: string) => validator.isAlpha(value),
+    //     message: '{VALUE} is not valid, only alphabets are allowed',
+    //   },
+    // ],
   },
   fatherOccupation: {
     type: String,
@@ -111,20 +113,20 @@ const guardianSchema = new Schema<IGuardian>({
     required: [true, 'Mother Name is required'],
     trim: true,
     maxlength: [50, 'Mother name cannot be more than 50 characters'],
-    validate: [
-      {
-        validator: function (value: string) {
-          const mname =
-            value?.charAt(0).toUpperCase() + value?.slice(1)?.toLowerCase();
-          return mname === value;
-        },
-        message: '{VALUE} is not in capitalize format',
-      },
-      {
-        validator: (value: string) => validator.isAlpha(value),
-        message: '{VALUE} is not valid, only alphabets are allowed',
-      },
-    ],
+    // validate: [
+    //   {
+    //     validator: function (value: string) {
+    //       const mname =
+    //         value?.charAt(0).toUpperCase() + value?.slice(1)?.toLowerCase();
+    //       return mname === value;
+    //     },
+    //     message: '{VALUE} is not in capitalize format',
+    //   },
+    //   {
+    //     validator: (value: string) => validator.isAlpha(value),
+    //     message: '{VALUE} is not valid, only alphabets are allowed',
+    //   },
+    // ],
   },
   motherOccupation: {
     type: String,
@@ -147,20 +149,20 @@ const localGuardianSchema = new Schema<ILocalGuardian>({
     required: [true, 'Name is required'],
     trim: true,
     maxlength: [50, 'Local Guardian name cannot be more than 50 characters'],
-    validate: [
-      {
-        validator: function (value: string) {
-          const gname =
-            value?.charAt(0).toUpperCase() + value?.slice(1)?.toLowerCase();
-          return gname === value;
-        },
-        message: '{VALUE} is not in capitalize format',
-      },
-      {
-        validator: (value: string) => validator.isAlpha(value),
-        message: '{VALUE} is not valid, only alphabets are allowed',
-      },
-    ],
+    // validate: [
+    //   {
+    //     validator: function (value: string) {
+    //       const gname =
+    //         value?.charAt(0).toUpperCase() + value?.slice(1)?.toLowerCase();
+    //       return gname === value;
+    //     },
+    //     message: '{VALUE} is not in capitalize format',
+    //   },
+    //   {
+    //     validator: (value: string) => validator.isAlpha(value),
+    //     message: '{VALUE} is not valid, only alphabets are allowed',
+    //   },
+    // ],
   },
   occupation: {
     type: String,
@@ -182,19 +184,24 @@ const localGuardianSchema = new Schema<ILocalGuardian>({
   },
 });
 
-
 // for custom instance
 // const studentSchema = new Schema<IStudent, CustomStudentModel, StudentMethods>({
 
 // for custom static
-const studentSchema = new Schema<IStudent, CustomStudentModel>({
+// const studentSchema = new Schema<IStudent, CustomStudentModel>({
 
 // normal one
-// const studentSchema = new Schema<IStudent>({
+const studentSchema = new Schema<IStudent>({
   id: {
     type: String,
     required: [true, `Id is required`],
     unique: true,
+  },
+  password: {
+    type: String,
+    required: [true, `Password is required`],
+    unique: true,
+    maxlength: [20, `Passwrod can't be more than 20 characters`],
   },
   name: {
     type: userNameSchema,
@@ -262,12 +269,43 @@ const studentSchema = new Schema<IStudent, CustomStudentModel>({
   isDeleted: Boolean,
 });
 
+// pre save middleware/hook
+studentSchema.pre('save', async function (next) {
+  this.password = await bcrypt.hash(
+    this.password,
+    Number(config?.bcrypt_salt_rounds),
+  );
+  // console.log(`${this} pre hook: we will save the student`);
+  next();
+});
+
+// post save middleware/hook
+studentSchema.post('save', function (doc, next) {
+  doc.password = '';
+  // console.log(`${this} post hook: we saved the student`);
+  next();
+});
+
+// query middleware
+studentSchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+studentSchema.pre('findOne', function (next) {
+  this.findOne({ isDeleted: { $ne: true } });
+  next();
+});
+studentSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+  next();
+});
+
 // for custom static
-studentSchema.statics.isStudentExist = async (id: string) => {
-  const existingStudent = await Student.findOne({id});
-  return existingStudent; 
-}
-const Student = model<IStudent, CustomStudentModel>('Student', studentSchema);
+// studentSchema.statics.isStudentExist = async (id: string) => {
+//   const existingStudent = await Student.findOne({id});
+//   return existingStudent;
+// }
+// const Student = model<IStudent, CustomStudentModel>('Student', studentSchema);
 
 // for custom instance
 
@@ -279,5 +317,5 @@ const Student = model<IStudent, CustomStudentModel>('Student', studentSchema);
 // const Student = model<IStudent, CustomStudentModel>('Student', studentSchema);
 
 // normal one
-// const Student = model<IStudent>('Student', studentSchema);
+const Student = model<IStudent>('Student', studentSchema);
 export default Student;

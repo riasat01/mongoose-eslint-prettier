@@ -21,9 +21,9 @@ const createStudent = async (req: Request, res: Response) => {
     // zod validation
 
     const zodParsedData = ZodStudentSchema.parse(student);
-    console.log(zodParsedData);
-    // const result = await StudentServices.createStudentIntoDb(zodParsedData);
-    const result = await StudentServices.createStudentIntoDb(student);
+    // console.log(zodParsedData);
+    const result = await StudentServices.createStudentIntoDb(zodParsedData);
+    // const result = await StudentServices.createStudentIntoDb(student);
     res.status(200).json({
       success: true,
       message: `student created successfully`,
@@ -72,9 +72,27 @@ const getSingleStudent = async (req: Request, res: Response) => {
     });
   }
 };
+const deleteSingleStudent = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const result = await StudentServices.deleteSingleStudentFromDb(id);
+    res.status(200).json({
+      success: true,
+      message: `student is deleted successfully`,
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      succcess: false,
+      message: `something went wrong while deleting the student`,
+      error,
+    });
+  }
+};
 
 export const Studentcontroller = {
   createStudent,
   getAllStudents,
   getSingleStudent,
+  deleteSingleStudent,
 };
