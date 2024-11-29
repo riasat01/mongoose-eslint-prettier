@@ -23,7 +23,7 @@ export interface ILocalGuardian {
 export default interface IStudent {
   id: string;
   name: IUserName;
-  gender: 'male' | 'female';
+  gender: 'male' | 'female' | 'other';
   dateOfBirth: string;
   email: string;
   contactNo: string;
