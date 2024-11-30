@@ -7,8 +7,7 @@ import IStudent, {
   IUserName,
   // StudentMethods,   for custom instance
 } from './student.interface';
-import bcrypt from 'bcrypt';
-import config from '../../config';
+import User from '../user/user.model';
 
 const userNameSchema = new Schema<IUserName>({
   firstName: {
@@ -198,11 +197,11 @@ const studentSchema = new Schema<IStudent>(
       required: [true, `Id is required`],
       unique: true,
     },
-    password: {
-      type: String,
-      required: [true, `Password is required`],
+    user: {
+      type: Schema.Types.ObjectId,
+      required: true,
       unique: true,
-      maxlength: [20, `Passwrod can't be more than 20 characters`],
+      ref: User,
     },
     name: {
       type: userNameSchema,
@@ -259,14 +258,6 @@ const studentSchema = new Schema<IStudent>(
       required: [true, `Local Guardian is required`],
     },
     profileImage: String,
-    isActive: {
-      type: String,
-      enum: {
-        values: ['active', 'blocked'],
-        message: `IsActive value must be either 'active' or 'blocked'`,
-      },
-      default: 'active',
-    },
     isDeleted: Boolean,
   },
   {
@@ -285,23 +276,6 @@ studentSchema.virtual('fullName').get(function () {
     ' ' +
     this?.name?.lastName
   );
-});
-
-// pre save middleware/hook
-studentSchema.pre('save', async function (next) {
-  this.password = await bcrypt.hash(
-    this.password,
-    Number(config?.bcrypt_salt_rounds),
-  );
-  // console.log(`${this} pre hook: we will save the student`);
-  next();
-});
-
-// post save middleware/hook
-studentSchema.post('save', function (doc, next) {
-  doc.password = '';
-  // console.log(`${this} post hook: we saved the student`);
-  next();
 });
 
 // query middleware
