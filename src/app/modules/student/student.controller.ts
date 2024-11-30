@@ -1,12 +1,8 @@
-import { NextFunction, Request, Response } from 'express';
+import { RequestHandler } from 'express';
 import { StudentServices } from './student.service';
 // import JoiStudentSchema from './joi.student.model';
 
-const getAllStudents = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+const getAllStudents: RequestHandler = async (req, res, next) => {
   try {
     const result = await StudentServices.getAllStudentsFromDb();
     res.status(200).json({
@@ -19,11 +15,7 @@ const getAllStudents = async (
   }
 };
 
-const getSingleStudent = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+const getSingleStudent: RequestHandler = async (req, res, next) => {
   try {
     const { id } = req.params;
     const result = await StudentServices.getSingleStudentFromDb(id);
@@ -36,11 +28,7 @@ const getSingleStudent = async (
     next(error);
   }
 };
-const deleteSingleStudent = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+const deleteSingleStudent: RequestHandler = async (req, res, next) => {
   try {
     const { id } = req.params;
     const result = await StudentServices.deleteSingleStudentFromDb(id);
