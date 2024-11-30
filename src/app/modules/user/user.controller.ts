@@ -1,10 +1,16 @@
-import { RequestHandler } from 'express';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
 // import ZodStudentSchema from '../student/zod.student.model';
 import { UserServices } from './user.service';
 import sendResponse from '../../utils/sendResponse';
 
-const createStudent: RequestHandler = async (req, res, next) => {
-  try {
+const catchAsync = (fn: RequestHandler) => {
+    return (req: Request, res: Response, next: NextFunction) => {
+        Promise.resolve(fn(req, res, next)).catch(error => next(error));
+    }
+}
+
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+const createStudent = catchAsync(async (req, res, next) => {
     const { password, student } = req.body;
 
     // Joi validation
@@ -30,10 +36,8 @@ const createStudent: RequestHandler = async (req, res, next) => {
       message: `student created successfully`,
       data: result,
     });
-  } catch (error) {
-    next(error);
-  }
-};
+  
+});
 
 export const UserController = {
   createStudent,
