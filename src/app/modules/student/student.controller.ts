@@ -1,13 +1,8 @@
-import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { StudentServices } from './student.service';
 import sendResponse from '../../utils/sendResponse';
+import catchAsync from '../../utils/catchAsync';
 // import JoiStudentSchema from './joi.student.model';
 
-const catchAsync = async (fn: RequestHandler) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    Promise.resolve(fn(req, res, next)).catch((error) => next(error));
-  };
-};
 
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 const getAllStudents = catchAsync(async (req, res, next) => {
