@@ -3,7 +3,6 @@ import sendResponse from '../../utils/sendResponse';
 import catchAsync from '../../utils/catchAsync';
 // import JoiStudentSchema from './joi.student.model';
 
-
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 const getAllStudents = catchAsync(async (req, res, next) => {
   const result = await StudentServices.getAllStudentsFromDb();
