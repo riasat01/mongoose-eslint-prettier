@@ -11,6 +11,7 @@ const globalErrorHandler = (
     res.json({
       success: false,
       message: `Global error handler is saying something went wrong!`,
+      error,
     });
   }
   // next();
