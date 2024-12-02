@@ -38,6 +38,21 @@ const academicSemesterSchema = new Schema<IAcademicSemester>(
   },
 );
 
+academicSemesterSchema.pre('save', async function (next) {
+  const isSemesterExists = await AcademicSemester.aggregate([
+    {
+      $match: {
+        name: this?.name,
+        year: this?.year,
+      },
+    },
+  ]);
+  if (isSemesterExists[0]) {
+    throw new Error(`Semester already exists!`);
+  }
+  next();
+});
+
 const AcademicSemester = model<IAcademicSemester>(
   'academic-semester',
   academicSemesterSchema,
