@@ -3,6 +3,9 @@ import IStudent from '../student/student.interface';
 import IUser from './user.interface';
 import Student from '../student/student.model';
 import User from './user.model';
+import AcademicSemester from '../academic-semester/academicSemester.model';
+import { generateStudentId } from './user.utils';
+import IAcademicSemester from '../academic-semester/academicSemester.interface';
 
 const createStudentIntoDb = async (password: string, studentData: IStudent) => {
   // create new user
@@ -10,7 +13,11 @@ const createStudentIntoDb = async (password: string, studentData: IStudent) => {
   const user: Partial<IUser> = {};
   user.password = password || config.default_password;
   user.role = 'student';
-  user.id = '2030100001';
+
+  const admissionSemester: IAcademicSemester | null = await AcademicSemester.findById(studentData?.admissionSemester);
+  if (admissionSemester) {
+    user.id = await generateStudentId(admissionSemester);
+  }
   const newUser = await User.create(user);
 
   // create new student
