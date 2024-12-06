@@ -1,5 +1,5 @@
 interface IAcademicFaculty {
-    name: string;
+  name: string;
 }
 
 export default IAcademicFaculty;

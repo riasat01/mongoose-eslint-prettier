@@ -5,9 +5,7 @@ import { AcademicFacultyServices } from './academicFaculty.service';
 const createAcademicFaculty = catchAsync(async (req, res) => {
   const academicFaculty = req.body;
   const result =
-    await AcademicFacultyServices.createAcademicFacultyIntoDb(
-      academicFaculty,
-    );
+    await AcademicFacultyServices.createAcademicFacultyIntoDb(academicFaculty);
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -28,9 +26,9 @@ const getAllAcademicFaculties = catchAsync(async (req, res) => {
 });
 
 const getSingleAcademicFaculty = catchAsync(async (req, res) => {
-  const { FacultyId } = req.params;
+  const { facultyId } = req.params;
   const result =
-    await AcademicFacultyServices.getSingleAcademicFacultyFromDb(FacultyId);
+    await AcademicFacultyServices.getSingleAcademicFacultyFromDb(facultyId);
 
   sendResponse(res, {
     statusCode: 200,
@@ -41,9 +39,9 @@ const getSingleAcademicFaculty = catchAsync(async (req, res) => {
 });
 
 const updateAcademicFaculty = catchAsync(async (req, res) => {
-  const { FacultyId } = req.params;
+  const { facultyId } = req.params;
   const result = await AcademicFacultyServices.updateAcademicFacultyIntoDb(
-    FacultyId,
+    facultyId,
     req.body,
   );
 
