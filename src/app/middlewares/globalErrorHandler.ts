@@ -10,7 +10,9 @@ const globalErrorHandler = (
   if (error) {
     res.json({
       success: false,
-      message: `Global error handler is saying something went wrong!`,
+      message:
+        error?.message ||
+        `Global error handler is saying something went wrong!`,
       error,
     });
   }

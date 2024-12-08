@@ -20,13 +20,13 @@ export const Months: TMonth[] = [
   'December',
 ];
 export const AcademicSemesterName: TAcademicSemester[] = [
-  'Autum',
-  'Summar',
+  'Autumn',
+  'Summer',
   'Fall',
 ];
 export const AcademicSemesterCode: TSemesterCode[] = ['01', '02', '03'];
 export const AcademicSemesterCodeMapper: TAcademicSemesterCodeMapper = {
-  Autum: '01',
-  Summar: '02',
+  Autumn: '01',
+  Summer: '02',
   Fall: '03',
 };
