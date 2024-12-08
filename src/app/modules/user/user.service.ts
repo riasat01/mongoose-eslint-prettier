@@ -6,6 +6,8 @@ import User from './user.model';
 import AcademicSemester from '../academic-semester/academicSemester.model';
 import { generateStudentId } from './user.utils';
 import IAcademicSemester from '../academic-semester/academicSemester.interface';
+import mongoose from 'mongoose';
+import AppError from '../../errors/AppError';
 
 const createStudentIntoDb = async (password: string, studentData: IStudent) => {
   // create new user
@@ -16,19 +18,37 @@ const createStudentIntoDb = async (password: string, studentData: IStudent) => {
 
   const admissionSemester: IAcademicSemester | null =
     await AcademicSemester.findById(studentData?.admissionSemester);
-  if (admissionSemester) {
-    user.id = await generateStudentId(admissionSemester);
-  }
-  const newUser = await User.create(user);
+  const session = await mongoose.startSession();
+    try {
+      session.startTransaction();
+      if (admissionSemester) {
+        user.id = await generateStudentId(admissionSemester);
+      }
+      const newUser = await User.create([user], {session});
+    
+      // create new student
+    
+      if (!newUser.length) {
 
-  // create new student
+        throw new AppError(400, 'Failed to create user')
+      }
 
-  if (Object.keys(newUser).length) {
-    studentData.id = newUser.id;
-    studentData.user = newUser._id;
-    const newStudent = Student.create(studentData);
-    return newStudent;
-  }
+        studentData.id = newUser[0].id;
+        studentData.user = newUser[0]._id;
+        const newStudent = await Student.create([studentData], {session});
+        if(!newStudent.length){
+          throw new AppError(400, `Failed to create student`)
+        }
+        await session.commitTransaction();
+        await session.endSession();
+        return newStudent[0];
+      // return newUser;
+    } catch (error) {
+      await session.abortTransaction();
+      await session.endSession();
+      throw new Error(`Failed: to create student: ${error}`);
+    }
+ 
   // for using custom static
 
   // if(await Student.isStudentExist(studentData?.id)){
@@ -43,7 +63,7 @@ const createStudentIntoDb = async (password: string, studentData: IStudent) => {
   // }
   // const result = await studentInstanceOfStudentModel.save();
 
-  return newUser;
+  
 };
 
 export const UserServices = {
