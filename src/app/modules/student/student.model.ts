@@ -7,7 +7,6 @@ import IStudent, {
   IUserName,
   // StudentMethods,   for custom instance
 } from './student.interface';
-import User from '../user/user.model';
 
 const userNameSchema = new Schema<IUserName>({
   firstName: {
@@ -201,7 +200,7 @@ const studentSchema = new Schema<IStudent>(
       type: Schema.Types.ObjectId,
       required: true,
       unique: true,
-      ref: User,
+      ref: 'User',
     },
     name: {
       type: userNameSchema,
@@ -260,9 +259,16 @@ const studentSchema = new Schema<IStudent>(
     profileImage: String,
     admissionSemester: {
       type: Schema.Types.ObjectId,
-      ref: 'AcademicSemester',
+      ref: 'academic-semester',
     },
-    isDeleted: Boolean,
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
+    academicDepartment: {
+      type: Schema.Types.ObjectId,
+      ref: 'Academic-Department',
+    },
   },
   {
     toJSON: {

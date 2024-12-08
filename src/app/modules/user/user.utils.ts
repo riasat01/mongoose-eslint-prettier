@@ -34,10 +34,10 @@ export const generateStudentId = async (payload: IAcademicSemester) => {
     lastStudentSemesterCode === currentStudentSemesterCode &&
     lastStudentYear === currentYear
   ) {
-    currentId = lastStudentId.substring(6, 10);
+    currentId = lastStudentId.substring(6);
   }
 
   let incrementId: string = (Number(currentId) + 1).toString().padStart(4, '0');
-  incrementId = `${payload.year.getFullYear()}${payload?.code}${incrementId};`;
+  incrementId = `${payload.year.getFullYear()}${payload?.code}${incrementId}`;
   return incrementId;
 };
