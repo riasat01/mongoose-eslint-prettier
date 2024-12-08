@@ -26,6 +26,17 @@ const getSingleStudent = catchAsync(async (req, res, next) => {
 });
 
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+const upadateSingleStudent = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const { student } = req.body;
+  const result = await StudentServices.updateSingleStudentIntoDb(id, student);
+  res.status(200).json({
+    success: true,
+    message: `student is updated successfully`,
+    data: result,
+  });
+});
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 const deleteSingleStudent = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const result = await StudentServices.deleteSingleStudentFromDb(id);
@@ -40,4 +51,5 @@ export const Studentcontroller = {
   getAllStudents,
   getSingleStudent,
   deleteSingleStudent,
+  upadateSingleStudent,
 };
