@@ -1,13 +1,15 @@
 import mongoose from 'mongoose';
 import app from './app';
 import config from './app/config';
+import { Server } from 'http';
 
 // const PORT = 5000;
+let server: Server;
 
 async function main() {
   try {
     await mongoose.connect(config?.databaseUrl as string);
-    app.listen(config?.port, () => {
+    server = app.listen(config?.port, () => {
       console.log(`server is running at port ${config?.port}`);
     });
   } catch (error) {
@@ -15,3 +17,17 @@ async function main() {
   }
 }
 main();
+
+
+process.on('unhandledRejection', () => {
+  if(server){
+    server.close(() => {
+      process.exit(1)
+    })
+  };
+  process.exit(1);
+});
+
+process.on('uncaughtException', () => {
+  process.exit(1);
+})
