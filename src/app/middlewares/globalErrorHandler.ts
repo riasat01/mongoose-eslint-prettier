@@ -2,6 +2,7 @@ import { ErrorRequestHandler } from 'express';
 import { ZodError } from 'zod';
 import { IErrorSource } from '../interface/errorSource.interface';
 import handleZodError from '../errors/handleZodError';
+import handleValidationError from '../errors/handleValidationError';
 
 const globalErrorHandler: ErrorRequestHandler = (
   error,
@@ -24,7 +25,14 @@ const globalErrorHandler: ErrorRequestHandler = (
     statusCode = simplifiedError?.statusCode;
     message = simplifiedError?.message;
     errorSources = simplifiedError?.errorSources;
+  }else if(error?.name === 'ValidationError'){
+    const simplifiedError = handleValidationError(error);
+    statusCode = simplifiedError?.statusCode;
+    message = simplifiedError?.message;
+    errorSources = simplifiedError?.errorSources;
   }
+
+
   res.status(statusCode).json({
     success: false,
     message,
