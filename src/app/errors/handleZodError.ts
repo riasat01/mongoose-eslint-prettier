@@ -1,8 +1,8 @@
 import { ZodError } from "zod";
-import { IErrorSource } from "../interface/errorSource.interface";
+import { IErrorSource, IGenericErrorResponse } from "../interface/errorSource.interface";
 import config from "../config";
 
-const handleZodError = (error: ZodError) => {
+const handleZodError = (error: ZodError): IGenericErrorResponse => {
     const statusCode = 400;
     const errorSources: IErrorSource[] = error?.issues?.map(issue => {
       return {
