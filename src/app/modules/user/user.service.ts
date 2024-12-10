@@ -4,10 +4,13 @@ import IUser from './user.interface';
 import Student from '../student/student.model';
 import User from './user.model';
 import AcademicSemester from '../academic-semester/academicSemester.model';
-import { generateStudentId } from './user.utils';
+import { generateFacultyId, generateStudentId } from './user.utils';
 import IAcademicSemester from '../academic-semester/academicSemester.interface';
 import mongoose from 'mongoose';
 import AppError from '../../errors/AppError';
+import { IFaculty } from '../Faculty/faculty.interface';
+import { AcademicDepartment } from '../academic-department/academicDepartment.model';
+import { Faculty } from '../Faculty/faculty.model';
 
 const createStudentIntoDb = async (password: string, studentData: IStudent) => {
   // create new user
@@ -63,6 +66,60 @@ const createStudentIntoDb = async (password: string, studentData: IStudent) => {
   // const result = await studentInstanceOfStudentModel.save();
 };
 
+const createFacultyIntoDB = async (password: string, payload: IFaculty) => {
+
+  const userData: Partial<IUser> = {};
+
+  userData.password = password || (config.default_password as string);
+
+  userData.role = 'faculty';
+
+  const academicDepartment = await AcademicDepartment.findById(
+    payload.academicDepartment,
+  );
+
+  if (!academicDepartment) {
+    throw new AppError(400, 'Academic department not found');
+  }
+
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+
+    userData.id = await generateFacultyId();
+
+    const newUser = await User.create([userData], { session }); // array
+
+    if (!newUser.length) {
+      throw new AppError(400, 'Failed to create user');
+    }
+    // set id , _id as user
+    payload.id = newUser[0].id;
+    payload.user = newUser[0]._id; //reference _id
+
+    // create a faculty (transaction-2)
+
+    const newFaculty = await Faculty.create([payload], { session });
+
+    if (!newFaculty.length) {
+      throw new AppError(400, 'Failed to create faculty');
+    }
+
+    await session.commitTransaction();
+    await session.endSession();
+
+    return newFaculty;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new Error(err);
+  }
+};
+
+
 export const UserServices = {
   createStudentIntoDb,
+  createFacultyIntoDB
 };
