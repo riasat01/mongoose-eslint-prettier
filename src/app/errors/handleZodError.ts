@@ -1,20 +1,23 @@
-import { ZodError } from "zod";
-import { IErrorSource, IGenericErrorResponse } from "../interface/errorSource.interface";
-import config from "../config";
+import { ZodError } from 'zod';
+import {
+  IErrorSource,
+  IGenericErrorResponse,
+} from '../interface/errorSource.interface';
+import config from '../config';
 
 const handleZodError = (error: ZodError): IGenericErrorResponse => {
-    const statusCode = 400;
-    const errorSources: IErrorSource[] = error?.issues?.map(issue => {
-      return {
-        path: issue?.path[issue?.path?.length - 1],
-        message: issue?.message,
-      }
-    })
+  const statusCode = 400;
+  const errorSources: IErrorSource[] = error?.issues?.map((issue) => {
     return {
-      statusCode,
-      message: `Validation error`,
-      errorSources,
-      stack: config.NODE_ENV === 'development' ? error?.stack : null,
-    }
-  }
+      path: issue?.path[issue?.path?.length - 1],
+      message: issue?.message,
+    };
+  });
+  return {
+    statusCode,
+    message: `Validation error`,
+    errorSources,
+    stack: config.NODE_ENV === 'development' ? error?.stack : null,
+  };
+};
 export default handleZodError;

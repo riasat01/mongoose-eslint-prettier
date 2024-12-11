@@ -6,21 +6,20 @@ import { IFaculty } from './faculty.interface';
 import { Faculty } from './faculty.model';
 import User from '../user/user.model';
 
-
-const getAllFacultiesFromDB = async (query: Record< string, unknown>) => {
-    const facultyQuery = new QueryBuilder(
-        Faculty.find().populate('academicDepartment'),
-        query
-    )
+const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
+  const facultyQuery = new QueryBuilder(
+    Faculty.find().populate('academicDepartment'),
+    query,
+  )
     .search(FacultySearchableFields)
     .filter()
     .sort()
     .paginate()
-    .fields()
+    .fields();
 
-    const result = await facultyQuery.modleQuery;
-    return result;
-}
+  const result = await facultyQuery.modleQuery;
+  return result;
+};
 
 const getSingleFacultyFromDB = async (id: string) => {
   const result = await Faculty.findById(id).populate('academicDepartment');
@@ -81,7 +80,7 @@ const deleteFacultyFromDB = async (id: string) => {
     await session.endSession();
 
     return deletedFaculty;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     await session.abortTransaction();
     await session.endSession();
@@ -90,7 +89,7 @@ const deleteFacultyFromDB = async (id: string) => {
 };
 
 export const FacultyServices = {
-  getAllFacultiesFromDB  ,
+  getAllFacultiesFromDB,
   getSingleFacultyFromDB,
   updateFacultyIntoDB,
   deleteFacultyFromDB,

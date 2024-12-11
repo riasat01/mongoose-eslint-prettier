@@ -67,7 +67,6 @@ const createStudentIntoDb = async (password: string, studentData: IStudent) => {
 };
 
 const createFacultyIntoDB = async (password: string, payload: IFaculty) => {
-
   const userData: Partial<IUser> = {};
 
   userData.password = password || (config.default_password as string);
@@ -110,7 +109,7 @@ const createFacultyIntoDB = async (password: string, payload: IFaculty) => {
     await session.endSession();
 
     return newFaculty;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     await session.abortTransaction();
     await session.endSession();
@@ -118,8 +117,7 @@ const createFacultyIntoDB = async (password: string, payload: IFaculty) => {
   }
 };
 
-
 export const UserServices = {
   createStudentIntoDb,
-  createFacultyIntoDB
+  createFacultyIntoDB,
 };
