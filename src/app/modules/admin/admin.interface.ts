@@ -11,17 +11,17 @@ export type TBloodGroup =
     | 'O+'
     | 'O-';
 
-export type TUserName = {
+export interface IUserName {
     firstName: string;
     middleName: string;
     lastName: string;
 };
 
-export type TAdmin = {
+export interface IAdmin {
     id: string;
     user: Types.ObjectId;
     designation: string;
-    name: TUserName;
+    name: IUserName;
     gender: TGender;
     dateOfBirth?: Date;
     email: string;
@@ -34,7 +34,7 @@ export type TAdmin = {
     isDeleted: boolean;
 };
 
-export interface AdminModel extends Model<TAdmin> {
+export interface AdminModel extends Model<IAdmin> {
     // eslint-disable-next-line no-unused-vars
-    isUserExists(id: string): Promise<TAdmin | null>;
+    isUserExists(id: string): Promise<IAdmin | null>;
 }
