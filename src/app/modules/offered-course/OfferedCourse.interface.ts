@@ -2,7 +2,7 @@ import { Types } from 'mongoose';
 
 export type TDays = 'Sat' | 'Sun' | 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri';
 
-export type TOfferedCourse = {
+export interface IOfferedCourse {
   semesterRegistration: Types.ObjectId;
   academicSemester?: Types.ObjectId;
   academicFaculty: Types.ObjectId;
@@ -14,10 +14,10 @@ export type TOfferedCourse = {
   days: TDays[];
   startTime: string;
   endTime: string;
-};
+}
 
-export type TSchedule = {
+export interface ISchedule {
   days: TDays[];
   startTime: string;
   endTime: string;
-};
+}
