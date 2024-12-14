@@ -27,7 +27,7 @@ export interface IAdmin {
   email: string;
   contactNo: string;
   emergencyContactNo: string;
-  bloogGroup?: TBloodGroup;
+  bloodGroup?: TBloodGroup;
   presentAddress: string;
   permanentAddress: string;
   profileImg?: string;
